@@ -6,6 +6,8 @@
 
 A simple, lightweight and customizable loading interface for iOS written by Swift.
 
+![Demo](Screenshots/Demo.gif "Demo")
+
 ---
 
 ## Requirements
