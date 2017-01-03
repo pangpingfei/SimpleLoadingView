@@ -11,6 +11,8 @@ import SimpleLoadingView
 
 class NewViewController: UIViewController {
 	
+	@IBOutlet weak var textView: UITextView!
+	
 	override func viewDidLoad() {
 		SimpleLoading.show(inView: self.view)
 	}

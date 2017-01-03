@@ -88,15 +88,21 @@ extension ViewController {
 
 		if indexPath.section == 0 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.maskViewAlpha = 0.5
+			case 0: SimpleLoading.Config.overApplicationWindow = true
+			case 1: SimpleLoading.Config.ignoreInteractionEvents = false
 			default: break
 			}
 		} else if indexPath.section == 1 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.superViewColor = .red
+			case 0: SimpleLoading.Config.maskViewAlpha = 0.5
 			default: break
 			}
 		} else if indexPath.section == 2 {
+			switch indexPath.row {
+			case 0: SimpleLoading.Config.superViewColor = .red
+			default: break
+			}
+		} else if indexPath.section == 3 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.viewColor         = .black
 			case 1: SimpleLoading.Config.viewAlpha         = 0.75
@@ -106,19 +112,19 @@ extension ViewController {
 			case 5: SimpleLoading.Config.viewShadowOpacity = 0.8
 			default: break
 			}
-		} else if indexPath.section == 3 {
+		} else if indexPath.section == 4 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.activityStyle = .whiteLarge
 			case 1: SimpleLoading.Config.activityColor = .gray
 			default: break
 			}
-		} else if indexPath.section == 4 {
+		} else if indexPath.section == 5 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.textColor = .white
 			case 1: SimpleLoading.Config.textSize  = 20
 			default: break
 			}
-		} else if indexPath.section == 5 {
+		} else if indexPath.section == 6 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.horizontalPadding = 30
 			case 1: SimpleLoading.Config.verticalPadding   = 30
@@ -134,15 +140,21 @@ extension ViewController {
 	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.maskViewAlpha = nil
+			case 0: SimpleLoading.Config.overApplicationWindow = false
+			case 1: SimpleLoading.Config.ignoreInteractionEvents = true
 			default: break
 			}
 		} else if indexPath.section == 1 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.superViewColor = nil
+			case 0: SimpleLoading.Config.maskViewAlpha = nil
 			default: break
 			}
 		} else if indexPath.section == 2 {
+			switch indexPath.row {
+			case 0: SimpleLoading.Config.superViewColor = nil
+			default: break
+			}
+		} else if indexPath.section == 3 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.viewColor         = nil
 			case 1: SimpleLoading.Config.viewAlpha         = nil
@@ -152,19 +164,19 @@ extension ViewController {
 			case 5: SimpleLoading.Config.viewShadowOpacity = nil
 			default: break
 			}
-		} else if indexPath.section == 3 {
+		} else if indexPath.section == 4 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.activityStyle = nil
 			case 1: SimpleLoading.Config.activityColor = nil
 			default: break
 			}
-		} else if indexPath.section == 4 {
+		} else if indexPath.section == 5 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.textColor = nil
 			case 1: SimpleLoading.Config.textSize  = nil
 			default: break
 			}
-		} else if indexPath.section == 5 {
+		} else if indexPath.section == 6 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.horizontalPadding = nil
 			case 1: SimpleLoading.Config.verticalPadding   = nil

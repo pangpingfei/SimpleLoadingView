@@ -9,8 +9,8 @@
 
 public struct SimpleLoading {
 
-	fileprivate static var view: SimpleLoadingView?
 	fileprivate static var maskView: UIView!
+	fileprivate static var loadingView: SimpleLoadingView?
 
 }
 
@@ -21,6 +21,7 @@ public extension SimpleLoading {
 	public struct Config {
 		
 		public static var overApplicationWindow: Bool = false // default is false
+		public static var ignoreInteractionEvents: Bool = true // default is true
 		
 		/// Mask view alpha.
 		public static var maskViewAlpha: CGFloat? // [0,1] range. default is 0
@@ -84,7 +85,7 @@ public extension SimpleLoading {
 	///  - inView: UIView. SimpleLoadingView will be added to the view. default is nil
 	public static func show(_ style: SimpleLoading.Style = .noText, duration: TimeInterval? = nil, inView: UIView? = nil) {
 		
-		guard view == nil else {
+		guard loadingView == nil else {
 			hide {
 				show(style, duration: duration, inView: inView)
 			}
@@ -101,7 +102,7 @@ public extension SimpleLoading {
 			return
 		}
 		
-		self.view = view
+		self.loadingView = view
 		
 		DispatchQueue.main.async {
 			if let alpha = SimpleLoading.Config.maskViewAlpha, alpha > 0, alpha <= 1 {
@@ -130,7 +131,7 @@ public extension SimpleLoading {
 	///	 - completion: Closure. default is nil
 	public static func hide(_ completion: (() -> Void)? = nil) {
 		
-		guard view != nil else {
+		guard loadingView != nil else {
 			debugPrint("No SimpleLoadingView...")
 			return
 		}
@@ -147,20 +148,18 @@ public extension SimpleLoading {
 				completion?()
 			}
 		}
-
-		if !Thread.current.isMainThread {
-			DispatchQueue.main.async {
-				view?.hide() {
-					self.view = nil
-					removeMaskView()
-				}
-			}
-		} else {
-			view?.hide() {
-				self.view = nil
+		
+		func removeView() {
+			loadingView?.hide() {
+				self.loadingView = nil
 				removeMaskView()
 			}
 		}
+
+		if Thread.current.isMainThread { removeView() } else {
+			DispatchQueue.main.async { removeView() }
+		}
+		
 	}
 
 

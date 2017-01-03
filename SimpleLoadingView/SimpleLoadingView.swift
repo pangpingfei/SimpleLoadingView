@@ -20,7 +20,9 @@ internal var topMostController: UIViewController? {
 internal class SimpleLoadingView: UIView {
 	
 	deinit {
-		debugPrint("SimpleLoadingView deinit")
+		#if DEBUG
+			debugPrint("SimpleLoadingView deinit")
+		#endif
 	}
 
 	// only activity
@@ -109,16 +111,21 @@ internal extension SimpleLoadingView {
 	func show(inView: UIView? = nil) {
 		alpha = 0
 		if let view = inView {
-			view.translatesAutoresizingMaskIntoConstraints = true
-			self.center = view.center
+			self.translatesAutoresizingMaskIntoConstraints = false
 			view.addSubview(self)
+			let h = NSLayoutConstraint.constraints(withVisualFormat: "H:|[self]|", options: .alignAllCenterX, metrics: nil, views: ["self" : self])
+			let v = NSLayoutConstraint.constraints(withVisualFormat: "V:|[self]|", options: .alignAllCenterY, metrics: nil, views: ["self" : self])
+			view.addConstraints(h)
+			view.addConstraints(v)
 		} else {
-			frame = UIScreen.main.bounds
 			if SimpleLoading.Config.overApplicationWindow {
 				UIApplication.shared.windows.first?.addSubview(self)
 			} else {
 				topMostController!.view.addSubview(self)
 			}
+		}
+		if SimpleLoading.Config.ignoreInteractionEvents {
+			UIApplication.shared.beginIgnoringInteractionEvents()
 		}
 		UIView.animate(withDuration: 0.2) {
 			self.alpha = 1.0
@@ -131,6 +138,9 @@ internal extension SimpleLoadingView {
 			self.alpha = 0
 		}, completion: { _ in
 			self.removeFromSuperview()
+			if SimpleLoading.Config.ignoreInteractionEvents {
+				UIApplication.shared.endIgnoringInteractionEvents()
+			}
 			completion()
 		})
 	}
@@ -198,6 +208,7 @@ private extension SimpleLoadingView {
 	}
 	
 	func setupSuperView() {
+		frame = UIScreen.main.bounds
 		if let c = SimpleLoading.Config.superViewColor { self.backgroundColor = c }
 	}
 	
