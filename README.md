@@ -17,7 +17,9 @@ A simple, lightweight and customizable loading interface for iOS written by Swif
 
 ## Installation
 
-### Carthage(Recommend)
+### Carthage (Recommend)
+[中文 Chinese Github](https://github.com/pangpingfei/SwiftBlog/blob/master/Others/Carthage.md) [中文 Chinese Jianshu](http://www.jianshu.com/p/ab2768af4d94) 
+
 Create a `Cartfile` that lists the framework and run `carthage update`. Follow the [instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios) to add `$(SRCROOT)/Carthage/Build/iOS/SimpleLoadingView.framework` to an iOS project.
 
 ```
