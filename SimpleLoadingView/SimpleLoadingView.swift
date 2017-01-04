@@ -12,139 +12,117 @@ internal var topMostController: UIViewController? {
 	while let pVC = presentedVC?.presentedViewController {
 		presentedVC = pVC
 	}
-	
+
 	return presentedVC
 }
 
 
 internal class SimpleLoadingView: UIView {
-	
+
 	deinit {
 		#if DEBUG
 			debugPrint("SimpleLoadingView deinit")
 		#endif
 	}
-
-	// only activity
-	@IBOutlet weak var viewForStyleA: UIView!
-	@IBOutlet weak var activityForStyleA: UIActivityIndicatorView!
 	
-	@IBOutlet weak var leadingForStyleA: NSLayoutConstraint!
-	@IBOutlet weak var topForStyleA: NSLayoutConstraint!
-	@IBOutlet weak var trailingForStyleA: NSLayoutConstraint!
-	@IBOutlet weak var bottomForStyleA: NSLayoutConstraint!
+	fileprivate var ignoreInteractionEvents: Bool = false
 	
-	// only label
-	@IBOutlet weak var viewForStyleB: UIView!
-	@IBOutlet weak var labelForStyleB: UILabel!
-	
-	@IBOutlet weak var leadingForStyleB: NSLayoutConstraint!
-	@IBOutlet weak var topForStyleB: NSLayoutConstraint!
-	@IBOutlet weak var trailingForStyleB: NSLayoutConstraint!
-	@IBOutlet weak var bottomForStyleB: NSLayoutConstraint!
-	
-	// activity on left, label on right
-	@IBOutlet weak var viewForStyleC: UIView!
-	@IBOutlet weak var activityForStyleC: UIActivityIndicatorView!
-	@IBOutlet weak var labelForStyleC: UILabel!
-	
-	@IBOutlet weak var leadingForStyleC: NSLayoutConstraint!
-	@IBOutlet weak var topForStyleC: NSLayoutConstraint!
-	@IBOutlet weak var trailingForStyleC: NSLayoutConstraint!
-	@IBOutlet weak var bottomForStyleC: NSLayoutConstraint!
-	
-	@IBOutlet weak var spacingForStyleC: NSLayoutConstraint!
-	
-	// label on left, actitivty on right
-	@IBOutlet weak var viewForStyleD: UIView!
-	@IBOutlet weak var labelForStyleD: UILabel!
-	@IBOutlet weak var activityForStyleD: UIActivityIndicatorView!
-	
-	@IBOutlet weak var leadingForStyleD: NSLayoutConstraint!
-	@IBOutlet weak var topForStyleD: NSLayoutConstraint!
-	@IBOutlet weak var trailingForStyleD: NSLayoutConstraint!
-	@IBOutlet weak var bottomForStyleD: NSLayoutConstraint!
-	
-	@IBOutlet weak var spacingForStyleD: NSLayoutConstraint!
-	
-	// activity on top, label on bottom
-	@IBOutlet weak var viewForStyleE: UIView!
-	@IBOutlet weak var activityForStyleE: UIActivityIndicatorView!
-	@IBOutlet weak var labelForStyleE: UILabel!
-	
-	@IBOutlet weak var leadingForStyleE: NSLayoutConstraint!
-	@IBOutlet weak var topForStyleE: NSLayoutConstraint!
-	@IBOutlet weak var trailingForStyleE: NSLayoutConstraint!
-	@IBOutlet weak var bottomForStyleE: NSLayoutConstraint!
-	
-	@IBOutlet weak var spacingForStyleE: NSLayoutConstraint!
-	
-	// label on top, activity on bottom
-	@IBOutlet weak var viewForStyleF: UIView!
-	@IBOutlet weak var labelForStyleF: UILabel!
-	@IBOutlet weak var activityForStyleF: UIActivityIndicatorView!
-	
-	@IBOutlet weak var leadingForStyleF: NSLayoutConstraint!
-	@IBOutlet weak var topForStyleF: NSLayoutConstraint!
-	@IBOutlet weak var trailingForStyleF: NSLayoutConstraint!
-	@IBOutlet weak var bottomForStyleF: NSLayoutConstraint!
-	
-	@IBOutlet weak var spacingForStyleF: NSLayoutConstraint!
-
-}
-
-
-internal extension SimpleLoadingView {
-	
-	static func create(style: SimpleLoading.Style) -> SimpleLoadingView? {
-		let bundle = Bundle(identifier: "PangPingfei.SimpleLoadingView")
-		let view = bundle?.loadNibNamed("SimpleLoadingView", owner: nil, options: nil)?.first as? SimpleLoadingView
-		view?.setupView(style: style)
+	fileprivate lazy var view: UIView = { [unowned self] in
+		let view = UIView()
+		view.backgroundColor = SimpleLoading.Config.viewColor
+		view.alpha = SimpleLoading.Config.viewAlpha
+		view.layer.cornerRadius = SimpleLoading.Config.viewCornerRadius
+		view.layer.masksToBounds = true
+		view.layer.borderWidth = SimpleLoading.Config.viewBorderWidth
+		view.layer.borderColor = SimpleLoading.Config.viewBorderColor.cgColor
+		let opacity = SimpleLoading.Config.viewShadowOpacity
+		if opacity > 0, opacity <= 1 {
+			view.layer.masksToBounds = false
+			view.layer.shadowOffset = CGSize(width: 0, height: 1)
+			view.layer.shadowRadius = view.layer.cornerRadius
+			view.layer.shadowOpacity = opacity
+		}
+		view.translatesAutoresizingMaskIntoConstraints = false
+		self.addSubview(view)
 		return view
+	}()
+
+	fileprivate lazy var activity: UIActivityIndicatorView = { [unowned self] in
+		let activity = UIActivityIndicatorView(activityIndicatorStyle: SimpleLoading.Config.activityStyle)
+		if let color = SimpleLoading.Config.activityColor { activity.color = color }
+		activity.hidesWhenStopped = true
+		activity.startAnimating()
+		activity.translatesAutoresizingMaskIntoConstraints = false
+		self.view.addSubview(activity)
+		return activity
+	}()
+
+	fileprivate lazy var label: UILabel = { [unowned self] in
+		let label = UILabel()
+		label.textAlignment = .center
+		label.font = UIFont.systemFont(ofSize: SimpleLoading.Config.textSize)
+		label.textColor = SimpleLoading.Config.textColor
+		label.translatesAutoresizingMaskIntoConstraints = false
+		self.view.addSubview(label)
+		return label
+	}()
+
+
+	init(style: SimpleLoading.Style) {
+		super.init(frame: UIScreen.main.bounds)
+		setupView(style: style)
 	}
-	
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 }
 
 
 internal extension SimpleLoadingView {
-	
+
 	func show(inView: UIView? = nil) {
-		alpha = 0
-		if let view = inView {
-			self.translatesAutoresizingMaskIntoConstraints = false
-			view.addSubview(self)
-			let h = NSLayoutConstraint.constraints(withVisualFormat: "H:|[self]|", options: .alignAllCenterX, metrics: nil, views: ["self" : self])
-			let v = NSLayoutConstraint.constraints(withVisualFormat: "V:|[self]|", options: .alignAllCenterY, metrics: nil, views: ["self" : self])
-			view.addConstraints(h)
-			view.addConstraints(v)
-		} else {
+		var parentView: UIView!
+		if let view = inView { parentView = view } else {
 			if SimpleLoading.Config.overApplicationWindow {
-				UIApplication.shared.windows.first?.addSubview(self)
+				parentView = UIApplication.shared.windows.first
 			} else {
-				topMostController!.view.addSubview(self)
+				parentView = topMostController!.view
 			}
 		}
-		if SimpleLoading.Config.ignoreInteractionEvents {
+		self.alpha = 0
+		self.translatesAutoresizingMaskIntoConstraints = false
+		parentView.addSubview(self)
+		parentView.addConstraint(with: self, attribute: .width, relatedBy: .equal)
+		parentView.addConstraint(with: self, attribute: .height, relatedBy: .equal)
+		parentView.addConstraint(with: self, attribute: .centerX, relatedBy: .equal)
+		parentView.addConstraint(with: self, attribute: .centerY, relatedBy: .equal)
+
+		if let ignore = SimpleLoading.Config.ignoreInteractionEvents, ignore {
 			UIApplication.shared.beginIgnoringInteractionEvents()
+			ignoreInteractionEvents = true
+		} else {
+			if inView == nil {
+				UIApplication.shared.beginIgnoringInteractionEvents()
+				ignoreInteractionEvents = true
+			}
 		}
-		UIView.animate(withDuration: 0.2) {
-			self.alpha = 1.0
-		}
+		
+		UIView.animate(withDuration: 0.2) { self.alpha = 1.0 }
 	}
-	
+
 	func hide(_ completion: @escaping () -> Void) {
 		alpha = 1
 		UIView.animate(withDuration: 0.2, animations: {
 			self.alpha = 0
 		}, completion: { _ in
 			self.removeFromSuperview()
-			if SimpleLoading.Config.ignoreInteractionEvents {
-				UIApplication.shared.endIgnoringInteractionEvents()
-			}
+			if self.ignoreInteractionEvents { UIApplication.shared.endIgnoringInteractionEvents() }
 			completion()
 		})
 	}
-	
+
 }
 
 
@@ -152,103 +130,107 @@ internal extension SimpleLoadingView {
 // MARK: Private
 
 private extension SimpleLoadingView {
-	
+
 	func setupView(style: SimpleLoading.Style) {
-		
-		setupSuperView()
-		
+
+		// self
+		self.backgroundColor = SimpleLoading.Config.superViewColor
+
+		// self -> view
+		var metrics = ["margin": SimpleLoading.Config.minHorizontalMargin]
+		self.addConstraints("H", "|-(>=margin)-[view]-(>=margin)-|", metrics: metrics, views: ["view": view])
+		metrics = ["margin": SimpleLoading.Config.minVerticalMargin]
+		self.addConstraints("V", "|-(>=margin)-[view]-(>=margin)-|", metrics: metrics, views: ["view": view])
+		self.addConstraint(with: view, attribute: .centerX)
+		self.addConstraint(with: view, attribute: .centerY)
+
+
 		switch style {
+
+		case .noText:
+			// self -> view -> activity
+			let metrics = ["padding": SimpleLoading.Config.verticalPadding]
+			view.addConstraints(nil, "|-(padding)-[activity]-(padding)-|", metrics: metrics, views: ["activity": activity])
+
+		case .text(let text):
+			// self -> view -> label
+			label.numberOfLines = 0
+			label.text = text
+			var metrics = ["padding": SimpleLoading.Config.horizontalPadding]
+			view.addConstraints("H", "|-(padding)-[label]-(padding)-|", metrics: metrics, views: ["label": label])
+			metrics = ["padding": SimpleLoading.Config.verticalPadding]
+			view.addConstraints("V", "|-(padding)-[label]-(padding)-|", metrics: metrics, views: ["label": label])
+
+		case .textRight(let text):
+			// self -> view -> activity | label
+			label.numberOfLines = 1
+			label.text = text
+			var metrics = ["padding": SimpleLoading.Config.horizontalPadding, "spacing": SimpleLoading.Config.horizontalSpacing]
+			view.addConstraints("H", "|-(padding)-[activity]-(spacing)-[label]-(padding)-|", metrics: metrics, views: ["activity":activity, "label":label])
+			metrics = ["padding": SimpleLoading.Config.verticalPadding]
+			view.addConstraints("V", "|-(padding)-[activity]-(padding)-|", metrics: metrics, views: ["activity":activity])
+			view.addConstraint(with: label, attribute: .centerY, relatedBy: .equal)
+
+		case .textLeft(let text):
+			// self -> view -> label | activity
+			label.numberOfLines = 1
+			label.lineBreakMode = .byTruncatingHead
+			label.text = text
+			var metrics = ["padding": SimpleLoading.Config.horizontalPadding, "spacing": SimpleLoading.Config.horizontalSpacing]
+			view.addConstraints("H", "|-(padding)-[label]-(spacing)-[activity]-(padding)-|", metrics: metrics, views: ["activity":activity, "label":label])
+			metrics = ["padding": SimpleLoading.Config.verticalPadding]
+			view.addConstraints("V", "|-(padding)-[activity]-(padding)-|", metrics: metrics, views: ["activity":activity])
+			view.addConstraint(with: label, attribute: .centerY, relatedBy: .equal)
 			
-		case .noText: // StyleA
-			setupLoadingView(viewForStyleA)
-			setupActivity(activityForStyleA)
-			setupPadding(vertical: [topForStyleA, bottomForStyleA], horizontal: [leadingForStyleA, trailingForStyleA])
-			viewForStyleA.isHidden = false
-			
-		case .text(let text): // StyleB
-			setupLoadingView(viewForStyleB)
-			setupLabel(labelForStyleB, text)
-			setupPadding(vertical: [topForStyleB, bottomForStyleB], horizontal: [leadingForStyleB, trailingForStyleB])
-			viewForStyleB.isHidden = false
-			
-		case .textRight(let text): // StyleC
-			setupLoadingView(viewForStyleC)
-			setupLabel(labelForStyleC, text)
-			setupActivity(activityForStyleC)
-			setupPadding(vertical: [topForStyleC, bottomForStyleC], horizontal: [leadingForStyleC, trailingForStyleC])
-			setupSpacing(vertical: nil, horizontal: spacingForStyleC)
-			viewForStyleC.isHidden = false
-			
-		case .textLeft(let text): // StyleD
-			setupLoadingView(viewForStyleD)
-			setupLabel(labelForStyleD, text)
-			setupActivity(activityForStyleD)
-			setupPadding(vertical: [topForStyleD, bottomForStyleD], horizontal: [leadingForStyleD, trailingForStyleD])
-			setupSpacing(vertical: nil, horizontal: spacingForStyleD)
-			viewForStyleD.isHidden = false
-			
-		case .textBottom(let text): // StyleE
-			setupLoadingView(viewForStyleE)
-			setupLabel(labelForStyleE, text)
-			setupActivity(activityForStyleE)
-			setupPadding(vertical: [topForStyleE, bottomForStyleE], horizontal: [leadingForStyleE, trailingForStyleE])
-			setupSpacing(vertical: spacingForStyleE, horizontal: nil)
-			viewForStyleE.isHidden = false
-			
-		case .textTop(let text): // StyleF
-			setupLoadingView(viewForStyleF)
-			setupLabel(labelForStyleF, text)
-			setupActivity(activityForStyleF)
-			setupPadding(vertical: [topForStyleF, bottomForStyleF], horizontal: [leadingForStyleF, trailingForStyleF])
-			setupSpacing(vertical: spacingForStyleF, horizontal: nil)
-			viewForStyleF.isHidden = false
-			
+		case .textBottom(let text):
+			// self -> view -> activity -- label
+			label.text = text
+			var metrics = ["padding": SimpleLoading.Config.horizontalPadding]
+			view.addConstraints("H", "|-(padding)-[label]-(padding)-|", metrics: metrics, views: ["label":label])
+			metrics = ["padding": SimpleLoading.Config.verticalPadding, "spacing": SimpleLoading.Config.verticalSpacing]
+			view.addConstraints("V", "|-(padding)-[activity]-(spacing)-[label]-(padding)-|", metrics: metrics, views: ["activity":activity, "label":label])
+			view.addConstraint(with: activity, attribute: .centerX, relatedBy: .equal)
+
+		case .textTop(let text):
+			// self -> view -> label -- activity
+			label.text = text
+			var metrics = ["padding": SimpleLoading.Config.horizontalPadding]
+			view.addConstraints("H", "|-(padding)-[label]-(padding)-|", metrics: metrics, views: ["label":label])
+			metrics = ["padding": SimpleLoading.Config.verticalPadding, "spacing": SimpleLoading.Config.verticalSpacing]
+			view.addConstraints("V", "|-(padding)-[label]-(spacing)-[activity]-(padding)-|", metrics: metrics, views: ["activity":activity, "label":label])
+			view.addConstraint(with: activity, attribute: .centerX, relatedBy: .equal)
 		}
-		
+
 	}
-	
-	func setupSuperView() {
-		frame = UIScreen.main.bounds
-		if let c = SimpleLoading.Config.superViewColor { self.backgroundColor = c }
-	}
-	
-	func setupLoadingView(_ view: UIView) {
-		if let c = SimpleLoading.Config.viewColor { view.backgroundColor = c }
-		if let a = SimpleLoading.Config.viewAlpha, a >= 0, a <= 1 { view.alpha = a }
-		if let r = SimpleLoading.Config.viewCornerRadius { view.layer.cornerRadius = r; view.layer.masksToBounds = true }
-		if let w = SimpleLoading.Config.viewBorderWidth { view.layer.borderWidth = w }
-		if let c = SimpleLoading.Config.viewBorderColor { view.layer.borderColor = c.cgColor }
-		if let o = SimpleLoading.Config.viewShadowOpacity, o > 0, o <= 1 {
-			view.layer.masksToBounds = false
-			view.layer.shadowOffset = CGSize(width: 0, height: 1)
-			view.layer.shadowRadius = view.layer.cornerRadius
-			view.layer.shadowOpacity = o
-		}
-	}
-	
-	func setupLabel(_ label: UILabel, _ text: String) {
-		label.text = text
-		if let s = SimpleLoading.Config.textSize { label.font = UIFont.systemFont(ofSize: s) }
-		if let c = SimpleLoading.Config.textColor { label.textColor = c }
-	}
-	
-	func setupActivity(_ a: UIActivityIndicatorView) {
-		if let s = SimpleLoading.Config.activityStyle { a.activityIndicatorViewStyle = s }
-		if let color = SimpleLoading.Config.activityColor { a.color = color }
-	}
-	
-	func setupPadding(vertical v: [NSLayoutConstraint], horizontal h: [NSLayoutConstraint]) {
-		if let p = SimpleLoading.Config.verticalPadding { for c in v { c.constant = p } }
-		if let p = SimpleLoading.Config.horizontalPadding { for c in h { c.constant = p } }
-	}
-	
-	func setupSpacing(vertical v: NSLayoutConstraint?, horizontal h: NSLayoutConstraint?) {
-		if let s = SimpleLoading.Config.verticalSpacing { v?.constant = s }
-		if let s = SimpleLoading.Config.horizontalSpacing { h?.constant = s }
-	}
-	
+
+
 }
 
+
+
+// MARK: - UIView extension
+
+fileprivate extension UIView {
+
+	// direction: "H" or "V", nil -> both
+	func addConstraints(_ direction: String?, _ format: String, metrics: [String: Any]?, views: [String: Any]) {
+		let noLayoutOptions = NSLayoutFormatOptions(rawValue: 0)
+		var cs = [NSLayoutConstraint]()
+		if let d = direction {
+			cs += NSLayoutConstraint.constraints(withVisualFormat: d + ":" + format, options: noLayoutOptions, metrics: metrics, views: views)
+		} else {
+			cs += NSLayoutConstraint.constraints(withVisualFormat: "V:" + format, options: noLayoutOptions, metrics: metrics, views: views)
+			cs += NSLayoutConstraint.constraints(withVisualFormat: "H:" + format, options: noLayoutOptions, metrics: metrics, views: views)
+
+		}
+		self.addConstraints(cs)
+	}
+
+	func addConstraint(with view: UIView, attribute: NSLayoutAttribute, relatedBy: NSLayoutRelation = .equal) {
+		let constraint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relatedBy, toItem: self, attribute: attribute, multiplier: 1, constant: 0)
+		self.addConstraint(constraint)
+	}
+}
 
 
 

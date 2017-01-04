@@ -13,8 +13,10 @@ class NewViewController: UIViewController {
 	
 	@IBOutlet weak var textView: UITextView!
 	
+	var text: String!
+	
 	override func viewDidLoad() {
-		SimpleLoading.show(inView: self.view)
+		SimpleLoading.show(.textBottom(text), inView: self.view)
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {

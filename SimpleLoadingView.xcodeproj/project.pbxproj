@@ -16,7 +16,6 @@
 		0ECCA6C51E17842C00D520AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0ECCA6C41E17842C00D520AC /* Assets.xcassets */; };
 		0ECCA6C81E17842C00D520AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ECCA6C61E17842C00D520AC /* LaunchScreen.storyboard */; };
 		0ECCA6CE1E1785A200D520AC /* SimpleLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECCA6CD1E1785A200D520AC /* SimpleLoadingView.swift */; };
-		0ECCA6D01E17883700D520AC /* SimpleLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ECCA6CF1E17883700D520AC /* SimpleLoadingView.xib */; };
 		0ECCA6D21E1795C000D520AC /* SimpleLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECCA6D11E1795C000D520AC /* SimpleLoading.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +42,6 @@
 		0ECCA6C71E17842C00D520AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0ECCA6C91E17842C00D520AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0ECCA6CD1E1785A200D520AC /* SimpleLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleLoadingView.swift; sourceTree = "<group>"; };
-		0ECCA6CF1E17883700D520AC /* SimpleLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleLoadingView.xib; sourceTree = "<group>"; };
 		0ECCA6D11E1795C000D520AC /* SimpleLoading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleLoading.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,11 +85,10 @@
 		0ECCA6AE1E17830D00D520AC /* SimpleLoadingView */ = {
 			isa = PBXGroup;
 			children = (
-				0ECCA6AF1E17830D00D520AC /* SimpleLoadingView.h */,
-				0ECCA6B01E17830D00D520AC /* Info.plist */,
 				0ECCA6D11E1795C000D520AC /* SimpleLoading.swift */,
 				0ECCA6CD1E1785A200D520AC /* SimpleLoadingView.swift */,
-				0ECCA6CF1E17883700D520AC /* SimpleLoadingView.xib */,
+				0ECCA6AF1E17830D00D520AC /* SimpleLoadingView.h */,
+				0ECCA6B01E17830D00D520AC /* Info.plist */,
 			);
 			path = SimpleLoadingView;
 			sourceTree = "<group>";
@@ -205,7 +202,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0ECCA6D01E17883700D520AC /* SimpleLoadingView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

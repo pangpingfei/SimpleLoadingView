@@ -12,10 +12,14 @@ import SimpleLoadingView
 
 class ViewController: UITableViewController {
 
+	@IBOutlet weak var textField: UITextField!
+	@IBOutlet weak var durationField: UITextField!
+	
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		showStartLoadingView()
+//		showStartLoadingView()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -25,8 +29,15 @@ class ViewController: UITableViewController {
 	override func viewDidAppear(_ animated: Bool) {
 
 	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if let c = segue.destination as? NewViewController {
+			c.text = sender as? String
+		}
+	}
 
 	@IBAction func rightBarButtonOnTouch(_ sender: Any) {
+		view.endEditing(true)
 		showLoadingView()
 	}
 
@@ -45,28 +56,34 @@ private extension ViewController {
 	}
 
 	func showLoadingView() {
+		guard let text = textField.text else { return }
+		guard let duration: TimeInterval = TimeInterval(durationField.text!) else {
+			SimpleLoading.show(.text("Get duration error, please input number!"))
+			return
+		}
 		let c = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-		let action1 = UIAlertAction(title: "show()", style: .default) { (_) in
-			SimpleLoading.show(duration: 3)
+		let action1 = UIAlertAction(title: ".Style.noText", style: .default) { (_) in
+			SimpleLoading.show(duration: duration)
 		}
-		let action2 = UIAlertAction(title: "show(.text(\"Loading\"))", style: .default) { (_) in
-			SimpleLoading.show(.text("Loading"), duration: 3)
+		let action2 = UIAlertAction(title: ".Style.text", style: .default) { (_) in
+			SimpleLoading.show(.text(text), duration: duration)
 		}
-		let action3 = UIAlertAction(title: "show(.textRight(\"Loading\"))", style: .default) { (_) in
-			SimpleLoading.show(.textRight("Loading"), duration: 3)
+		let action3 = UIAlertAction(title: ".Style.textRight", style: .default) { (_) in
+			SimpleLoading.show(.textRight(text), duration: duration)
 		}
-		let action4 = UIAlertAction(title: "show(.textBottom(\"Loading\"))", style: .default) { (_) in
-			SimpleLoading.show(.textBottom("Loading"), duration: 3)
+		let action4 = UIAlertAction(title: ".Style.textBottom", style: .default) { (_) in
+			SimpleLoading.show(.textBottom(text), duration: duration)
 		}
-		let action5 = UIAlertAction(title: "show(.textLeft(\"Loading\"))", style: .default) { (_) in
-			SimpleLoading.show(.textLeft("Loading"), duration: 3)
+		let action5 = UIAlertAction(title: ".Style.textLeft", style: .default) { (_) in
+			SimpleLoading.show(.textLeft(text), duration: duration)
 		}
-		let action6 = UIAlertAction(title: "show(.textTop(\"Loading\"))", style: .default) { (_) in
-			SimpleLoading.show(.textTop("Loading"), duration: 3)
+		let action6 = UIAlertAction(title: ".Style.textTop", style: .default) { (_) in
+			SimpleLoading.show(.textTop(text), duration: duration)
 		}
 		let action7 = UIAlertAction(title: "Show(inView: UIView)", style: .destructive) { (_) in
-			self.performSegue(withIdentifier: "ToNewView", sender: nil)
+			self.performSegue(withIdentifier: "ToNewView", sender: text)
+//			SimpleLoading.show(.textTop(text), duration: duration, inView: self.tableView)
 		}
 		c.addAction(action1)
 		c.addAction(action2)
@@ -130,6 +147,8 @@ extension ViewController {
 			case 1: SimpleLoading.Config.verticalPadding   = 30
 			case 2: SimpleLoading.Config.horizontalSpacing = 20
 			case 3: SimpleLoading.Config.verticalSpacing   = 20
+			case 4: SimpleLoading.Config.minHorizontalMargin = 50
+			case 5: SimpleLoading.Config.minVerticalMargin   = 100
 			default: break
 			}
 		}
@@ -141,47 +160,49 @@ extension ViewController {
 		if indexPath.section == 0 {
 			switch indexPath.row {
 			case 0: SimpleLoading.Config.overApplicationWindow = false
-			case 1: SimpleLoading.Config.ignoreInteractionEvents = true
+			case 1: SimpleLoading.Config.ignoreInteractionEvents = nil
 			default: break
 			}
 		} else if indexPath.section == 1 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.maskViewAlpha = nil
+			case 0: SimpleLoading.Config.maskViewAlpha = 0
 			default: break
 			}
 		} else if indexPath.section == 2 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.superViewColor = nil
+			case 0: SimpleLoading.Config.superViewColor = .clear
 			default: break
 			}
 		} else if indexPath.section == 3 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.viewColor         = nil
-			case 1: SimpleLoading.Config.viewAlpha         = nil
-			case 2: SimpleLoading.Config.viewCornerRadius  = nil
-			case 3: SimpleLoading.Config.viewBorderWidth   = nil
-			case 4: SimpleLoading.Config.viewBorderColor   = nil
-			case 5: SimpleLoading.Config.viewShadowOpacity = nil
+			case 0: SimpleLoading.Config.viewColor         = .white
+			case 1: SimpleLoading.Config.viewAlpha         = 1
+			case 2: SimpleLoading.Config.viewCornerRadius  = 5
+			case 3: SimpleLoading.Config.viewBorderWidth   = 0
+			case 4: SimpleLoading.Config.viewBorderColor   = .black
+			case 5: SimpleLoading.Config.viewShadowOpacity = 0
 			default: break
 			}
 		} else if indexPath.section == 4 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.activityStyle = nil
+			case 0: SimpleLoading.Config.activityStyle = .gray
 			case 1: SimpleLoading.Config.activityColor = nil
 			default: break
 			}
 		} else if indexPath.section == 5 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.textColor = nil
-			case 1: SimpleLoading.Config.textSize  = nil
+			case 0: SimpleLoading.Config.textColor = .lightGray
+			case 1: SimpleLoading.Config.textSize  = 15
 			default: break
 			}
 		} else if indexPath.section == 6 {
 			switch indexPath.row {
-			case 0: SimpleLoading.Config.horizontalPadding = nil
-			case 1: SimpleLoading.Config.verticalPadding   = nil
-			case 2: SimpleLoading.Config.horizontalSpacing = nil
-			case 3: SimpleLoading.Config.verticalSpacing   = nil
+			case 0: SimpleLoading.Config.horizontalPadding = 20
+			case 1: SimpleLoading.Config.verticalPadding   = 15
+			case 2: SimpleLoading.Config.horizontalSpacing = 5
+			case 3: SimpleLoading.Config.verticalSpacing   = 8
+			case 4: SimpleLoading.Config.minHorizontalMargin = 15
+			case 5: SimpleLoading.Config.minVerticalMargin   = 20
 			default: break
 			}
 		}
@@ -189,6 +210,19 @@ extension ViewController {
 	}
 
 }
+
+
+
+extension ViewController: UITextFieldDelegate {
+
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+		textField.resignFirstResponder()
+		return true
+	}
+
+}
+
+
 
 
 
