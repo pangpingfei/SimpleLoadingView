@@ -78,7 +78,7 @@ import SimpleLoadingView
 
 ### Spacing, margin, padding
 
-https://github.com/pangpingfei/SimpleLoadingView/raw/master/Screenshots/Desc.png
+https://github.com/pangpingfei/SimpleLoadingView/blob/master/Screenshots/Desc.png
 
 ### More...
 
