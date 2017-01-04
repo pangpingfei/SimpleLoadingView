@@ -7,7 +7,6 @@
 A simple, lightweight and customizable loading interface for iOS written by Swift.
 
 ![Demo](Screenshots/Demo.gif "Demo")
-![Desc](Screenshots/Desc.png "Desc")
 
 ---
 
@@ -76,6 +75,10 @@ import SimpleLoadingView
 	// ...
 ```
 > You can see all settings in public struct `SimpleLoading.Config` .
+
+### Spacing, margin, padding
+
+https://github.com/pangpingfei/SimpleLoadingView/raw/master/Screenshots/Desc.png
 
 ### More...
 
