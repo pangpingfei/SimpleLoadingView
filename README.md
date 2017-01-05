@@ -5,6 +5,7 @@
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 A simple, lightweight and customizable loading interface for iOS written by Swift.
+[中文说明文档](http://www.jianshu.com/p/24b75932c4d1)
 
 ![Demo](Screenshots/Demo.gif "Demo")
 
