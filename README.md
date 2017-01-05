@@ -35,7 +35,7 @@ import SimpleLoadingView
 ```
 
 ### Manually
-1. Download and drop ```SimpleLoading.swift``` ```SimpleLoadingView.swift``` ```SimpleLoadingView.xib``` in your project.  
+1. Download and drop ```SimpleLoading.swift``` ```SimpleLoadingView.swift``` into your project.  
 2. Congratulations!  
 
 ## Usage
