@@ -5,6 +5,7 @@
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 A simple, lightweight and customizable loading interface for iOS written by Swift.
+[中文说明文档](http://www.jianshu.com/p/24b75932c4d1)
 
 ![Demo](Screenshots/Demo.gif "Demo")
 
@@ -35,7 +36,7 @@ import SimpleLoadingView
 ```
 
 ### Manually
-1. Download and drop ```SimpleLoading.swift``` ```SimpleLoadingView.swift``` ```SimpleLoadingView.xib``` in your project.  
+1. Download and drop ```SimpleLoading.swift``` ```SimpleLoadingView.swift``` into your project.  
 2. Congratulations!  
 
 ## Usage
