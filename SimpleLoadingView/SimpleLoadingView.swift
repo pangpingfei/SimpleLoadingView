@@ -94,10 +94,7 @@ internal extension SimpleLoadingView {
 		self.alpha = 0
 		self.translatesAutoresizingMaskIntoConstraints = false
 		parentView.addSubview(self)
-		parentView.addConstraint(with: self, attribute: .width, relatedBy: .equal)
-		parentView.addConstraint(with: self, attribute: .height, relatedBy: .equal)
-		parentView.addConstraint(with: self, attribute: .centerX, relatedBy: .equal)
-		parentView.addConstraint(with: self, attribute: .centerY, relatedBy: .equal)
+		parentView.addConstraints(nil, "|[self]|", metrics: nil, views: ["self" : self])
 
 		if let ignore = SimpleLoading.Config.ignoreInteractionEvents, ignore {
 			UIApplication.shared.beginIgnoringInteractionEvents()
@@ -169,7 +166,7 @@ private extension SimpleLoadingView {
 			view.addConstraints("H", "|-(padding)-[activity]-(spacing)-[label]-(padding)-|", metrics: metrics, views: ["activity":activity, "label":label])
 			metrics = ["padding": SimpleLoading.Config.verticalPadding]
 			view.addConstraints("V", "|-(padding)-[activity]-(padding)-|", metrics: metrics, views: ["activity":activity])
-			view.addConstraint(with: label, attribute: .centerY, relatedBy: .equal)
+			view.addConstraint(with: label, attribute: .centerY)
 
 		case .textLeft(let text):
 			// self -> view -> label | activity
@@ -180,7 +177,7 @@ private extension SimpleLoadingView {
 			view.addConstraints("H", "|-(padding)-[label]-(spacing)-[activity]-(padding)-|", metrics: metrics, views: ["activity":activity, "label":label])
 			metrics = ["padding": SimpleLoading.Config.verticalPadding]
 			view.addConstraints("V", "|-(padding)-[activity]-(padding)-|", metrics: metrics, views: ["activity":activity])
-			view.addConstraint(with: label, attribute: .centerY, relatedBy: .equal)
+			view.addConstraint(with: label, attribute: .centerY)
 			
 		case .textBottom(let text):
 			// self -> view -> activity -- label
@@ -189,7 +186,7 @@ private extension SimpleLoadingView {
 			view.addConstraints("H", "|-(padding)-[label]-(padding)-|", metrics: metrics, views: ["label":label])
 			metrics = ["padding": SimpleLoading.Config.verticalPadding, "spacing": SimpleLoading.Config.verticalSpacing]
 			view.addConstraints("V", "|-(padding)-[activity]-(spacing)-[label]-(padding)-|", metrics: metrics, views: ["activity":activity, "label":label])
-			view.addConstraint(with: activity, attribute: .centerX, relatedBy: .equal)
+			view.addConstraint(with: activity, attribute: .centerX)
 
 		case .textTop(let text):
 			// self -> view -> label -- activity
@@ -198,7 +195,7 @@ private extension SimpleLoadingView {
 			view.addConstraints("H", "|-(padding)-[label]-(padding)-|", metrics: metrics, views: ["label":label])
 			metrics = ["padding": SimpleLoading.Config.verticalPadding, "spacing": SimpleLoading.Config.verticalSpacing]
 			view.addConstraints("V", "|-(padding)-[label]-(spacing)-[activity]-(padding)-|", metrics: metrics, views: ["activity":activity, "label":label])
-			view.addConstraint(with: activity, attribute: .centerX, relatedBy: .equal)
+			view.addConstraint(with: activity, attribute: .centerX)
 		}
 
 	}
